@@ -15,37 +15,37 @@ public class MapEditor
     [MenuItem("Tools/GenerateMap %#G")]
     private static void GenerateMap()
     {
-        GameObject go = GameObject.Find("Map");
-        if (go == null)
-            return;
-
-        Tilemap tm = Util.FindChild<Tilemap>(go, "Tilemap_Collision", true);
-        if (tm == null)
-            return;
-
-        // 1. 바이너리형태로 관리하거나,
-        // 2. 문자열로 관리
-        // 
-        using (var writer = File.CreateText("Assets/Resources/Map/output.txt"))
+        GameObject[] gameObjects = Resources.LoadAll<GameObject>("Prefabs/Map");
+        foreach (GameObject go in gameObjects)
         {
-            writer.WriteLine(tm.cellBounds.xMin);
-            writer.WriteLine(tm.cellBounds.xMax);
-            writer.WriteLine(tm.cellBounds.yMin);
-            writer.WriteLine(tm.cellBounds.yMax);
-
-            for (int y = tm.cellBounds.yMax; y >= tm.cellBounds.yMin; y--)
+            Tilemap tmBase = Util.FindChild<Tilemap>(go, "Tilemap_Base", true);
+            Tilemap tm = Util.FindChild<Tilemap>(go, "Tilemap_Collision", true);
+            // 1. 바이너리형태로 관리하거나,
+            // 2. 문자열로 관리
+            // 
+            using (var writer = File.CreateText($"Assets/Resources/Map/{go.name}.txt"))
             {
-                for (int x = tm.cellBounds.xMin; x <= tm.cellBounds.xMax; x++)
+                writer.WriteLine(tmBase.cellBounds.xMin);
+                writer.WriteLine(tmBase.cellBounds.xMax);
+                writer.WriteLine(tmBase.cellBounds.yMin);
+                writer.WriteLine(tmBase.cellBounds.yMax);
+
+                for (int y = tmBase.cellBounds.yMax; y >= tmBase.cellBounds.yMin; y--)
                 {
-                    TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
-                    if(tile!=null)
-                        writer.Write("1");
-                    else
-                        writer.Write("0");
+                    for (int x = tmBase.cellBounds.xMin; x <= tmBase.cellBounds.xMax; x++)
+                    {
+                        TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
+                        if(tile!=null)
+                            writer.Write("1");
+                        else
+                            writer.Write("0");
+                    }
+                    writer.WriteLine();
                 }
-                writer.WriteLine();
             }
         }
+
+        
     }
 
 #endif

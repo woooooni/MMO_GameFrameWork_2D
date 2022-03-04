@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Define
 {
+    public enum State
+    {
+        Idle,
+        Moving,
+        Skill,
+        Dead,
+    }
     public enum Scene
     {
         Unknown,
@@ -23,5 +30,14 @@ public class Define
     {
         Click,
         Drag,
+    }
+
+    public enum MoveDir
+    {
+        None,
+        Up,
+        Down,
+        Left,
+        Right
     }
 }
