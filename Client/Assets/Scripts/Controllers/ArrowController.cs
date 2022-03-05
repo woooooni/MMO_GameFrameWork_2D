@@ -24,6 +24,9 @@ public class ArrowController : BaseController
                 transform.rotation = Quaternion.Euler(0, 0, 90);
                 break;
         }
+
+        CurrState = State.Moving;
+        _speed = 15.0f;
         base.Init();
     }
 
@@ -32,48 +35,46 @@ public class ArrowController : BaseController
         //No Anim
     }
     
-    protected override void UpdateIdle()
+    protected override void MoveToNextPos()
     {
         //실제 좌표 이동
-        if (_moveDir != MoveDir.None)
+        Vector3Int destPos = CellPos;
+        switch (_moveDir)
         {
-            Vector3Int destPos = CellPos;
-            switch (_moveDir)
+            case MoveDir.Up:
+                destPos += Vector3Int.up;
+                break;
+            case MoveDir.Left:
+                destPos += Vector3Int.left;
+                break;
+            case MoveDir.Right:
+                destPos += Vector3Int.right;
+                break;
+            case MoveDir.Down:
+                destPos += Vector3Int.down;
+                break;
+        }
+        
+        if (Managers.Map.CanGo(destPos))
+        {
+            GameObject go = Managers.Object.Find(destPos);
+            if (go == null)
             {
-                case MoveDir.Up:
-                    destPos += Vector3Int.up;
-                    break;
-                case MoveDir.Left:
-                    destPos += Vector3Int.left;
-                    break;
-                case MoveDir.Right:
-                    destPos += Vector3Int.right;
-                    break;
-                case MoveDir.Down:
-                    destPos += Vector3Int.down;
-                    break;
-            }
-            
-            CurrState = State.Moving;
-            if (Managers.Map.CanGo(destPos))
-            {
-                GameObject go = Managers.Object.Find(destPos);
-                if (go == null)
-                {
-                    CellPos = destPos;
-                }
-                else
-                {
-                    Debug.Log(go.name);
-                    Managers.Resource.Destroy(gameObject);
-                }
+                CellPos = destPos;
             }
             else
             {
-                //Hit
+                BaseController bc = go.GetComponent<BaseController>();
+                if(bc != null)
+                    bc.OnDamaged();
                 Managers.Resource.Destroy(gameObject);
             }
-        } 
+        }
+        else
+        {
+            //Hit
+            Managers.Resource.Destroy(gameObject);
+        }
     }
     
 }

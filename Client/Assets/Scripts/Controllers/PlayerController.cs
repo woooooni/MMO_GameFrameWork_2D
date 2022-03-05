@@ -95,7 +95,6 @@ public class PlayerController : BaseController
         {
             case State.Idle:
                 GetDirInput();
-                GetIdleInput();
                 break;
             case State.Moving:
                 GetDirInput();
@@ -134,8 +133,16 @@ public class PlayerController : BaseController
         }
     }
 
-    void GetIdleInput()
+    protected override void UpdateIdle()
     {
+        //이동 상태
+        if (Dir != MoveDir.None)
+        {
+            CurrState = State.Moving;
+            return;
+        }
+        
+        //스킬 상태
         if (Input.GetKey(KeyCode.Space))
         {
             CurrState = State.Skill;
@@ -143,6 +150,7 @@ public class PlayerController : BaseController
             _coSkill = StartCoroutine("CoStartArrow");
         }
     }
+    
 
     IEnumerator CoStartPunch()
     {
@@ -150,7 +158,9 @@ public class PlayerController : BaseController
         GameObject go = Managers.Object.Find(GetFrontCellPos(1));
         if (go != null)
         {
-            Debug.Log(go.name);
+            BaseController bc = go.GetComponent<BaseController>();
+            if(bc != null)
+                bc.OnDamaged();
         }
         
         //대기시간

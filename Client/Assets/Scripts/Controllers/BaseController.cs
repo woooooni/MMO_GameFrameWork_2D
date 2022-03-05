@@ -13,8 +13,8 @@ public class BaseController : MonoBehaviour
     protected SpriteRenderer _sprite;
     
     //**상태 관리는 불리언으로 하지 않는다.**
-    private State _state = State.Idle;
-    public State CurrState
+    protected State _state = State.Idle;
+    public virtual State CurrState
     {
         get { return _state; }
         set
@@ -182,35 +182,6 @@ public class BaseController : MonoBehaviour
     //이동 가능한 상태일 때, 실제 좌표로 이동
     protected virtual void UpdateIdle()
     {
-        //실제 좌표 이동
-        if (_moveDir != MoveDir.None)
-        {
-            Vector3Int destPos = CellPos;
-            switch (_moveDir)
-            {
-                case MoveDir.Up:
-                    destPos += Vector3Int.up;
-                    break;
-                case MoveDir.Left:
-                    destPos += Vector3Int.left;
-                    break;
-                case MoveDir.Right:
-                    destPos += Vector3Int.right;
-                    break;
-                case MoveDir.Down:
-                    destPos += Vector3Int.down;
-                    break;
-            }
-            
-            CurrState = State.Moving;
-            if (Managers.Map.CanGo(destPos))
-            {
-                if (Managers.Object.Find(destPos) == null)
-                {
-                    CellPos = destPos;
-                }
-            }
-        } 
     }
     protected virtual void UpdateMoving()
     {
@@ -228,10 +199,7 @@ public class BaseController : MonoBehaviour
         if (dist < _speed * Time.deltaTime)
         {
             transform.position = destPos;
-            //예외적으로 애니메이션을 직접 컨트롤
-            _state = State.Idle;
-            if(_moveDir == MoveDir.None)
-                UpdateAnimation();
+            MoveToNextPos();
         }
         else
         {
@@ -240,8 +208,46 @@ public class BaseController : MonoBehaviour
         }
     }
 
+    protected virtual void MoveToNextPos()
+    {
+        if (_moveDir == MoveDir.None)
+        {
+            CurrState = State.Idle;
+            return;
+        }
+        Vector3Int destPos = CellPos;
+        switch (_moveDir)
+        {
+            case MoveDir.Up:
+                destPos += Vector3Int.up;
+                break;
+            case MoveDir.Left:
+                destPos += Vector3Int.left;
+                break;
+            case MoveDir.Right:
+                destPos += Vector3Int.right;
+                break;
+            case MoveDir.Down:
+                destPos += Vector3Int.down;
+                break;
+        }
+
+        if (Managers.Map.CanGo(destPos))
+        {
+            if (Managers.Object.Find(destPos) == null)
+            {
+                CellPos = destPos;
+            }
+        }
+    }
+    
     protected virtual void UpdateSkill(){}
     protected virtual void UpdateDead(){}
+
+    public virtual void OnDamaged()
+    {
+        
+    }
 
 
 }
