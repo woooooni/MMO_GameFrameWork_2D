@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Define
 {
-    public enum State
+    public enum CreatureState
     {
         Idle,
         Moving,

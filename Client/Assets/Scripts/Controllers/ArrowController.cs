@@ -25,7 +25,7 @@ public class ArrowController : BaseController
                 break;
         }
 
-        CurrState = State.Moving;
+        CurrState = CreatureState.Moving;
         _speed = 15.0f;
         base.Init();
     }

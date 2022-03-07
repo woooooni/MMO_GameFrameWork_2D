@@ -13,8 +13,8 @@ public class BaseController : MonoBehaviour
     protected SpriteRenderer _sprite;
     
     //**상태 관리는 불리언으로 하지 않는다.**
-    protected State _state = State.Idle;
-    public virtual State CurrState
+    protected CreatureState _state = CreatureState.Idle;
+    public virtual CreatureState CurrState
     {
         get { return _state; }
         set
@@ -68,7 +68,7 @@ public class BaseController : MonoBehaviour
     
     protected virtual void UpdateAnimation()
     {
-        if(CurrState == State.Idle)
+        if(CurrState == CreatureState.Idle)
         {
             switch (_lastDir)
             {
@@ -90,7 +90,7 @@ public class BaseController : MonoBehaviour
                     break;
             }
         }
-        else if(CurrState == State.Moving)
+        else if(CurrState == CreatureState.Moving)
         {
             switch (_moveDir)
             {
@@ -112,7 +112,7 @@ public class BaseController : MonoBehaviour
                     break;
             }
         }
-        else if(CurrState == State.Skill)
+        else if(CurrState == CreatureState.Skill)
         {
             //TODO
             switch (_lastDir)
@@ -165,15 +165,15 @@ public class BaseController : MonoBehaviour
     {
         switch (CurrState)
         {
-            case State.Idle:
+            case CreatureState.Idle:
                 UpdateIdle();
                 break;
-            case State.Moving:
+            case CreatureState.Moving:
                 UpdateMoving();
                 break;
-            case State.Skill:
+            case CreatureState.Skill:
                 break;
-            case State.Dead:
+            case CreatureState.Dead:
                 break;
         }
         
@@ -182,10 +182,11 @@ public class BaseController : MonoBehaviour
     //이동 가능한 상태일 때, 실제 좌표로 이동
     protected virtual void UpdateIdle()
     {
+        
     }
     protected virtual void UpdateMoving()
     {
-        if (CurrState != State.Moving)
+        if (CurrState != CreatureState.Moving)
             return;
         Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
         
@@ -195,6 +196,8 @@ public class BaseController : MonoBehaviour
         // 위 두가지를 가지고 있음.
         Vector3 moveDir = destPos - transform.position;
 
+        
+        //도착 여부 체크
         float dist = moveDir.magnitude;
         if (dist < _speed * Time.deltaTime)
         {
@@ -204,7 +207,7 @@ public class BaseController : MonoBehaviour
         else
         {
             transform.position += moveDir.normalized * _speed * Time.deltaTime;
-            CurrState = State.Moving;
+            CurrState = CreatureState.Moving;
         }
     }
 
@@ -212,7 +215,7 @@ public class BaseController : MonoBehaviour
     {
         if (_moveDir == MoveDir.None)
         {
-            CurrState = State.Idle;
+            CurrState = CreatureState.Idle;
             return;
         }
         Vector3Int destPos = CellPos;

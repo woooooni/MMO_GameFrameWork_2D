@@ -16,7 +16,7 @@ public class PlayerController : BaseController
     
     protected override void UpdateAnimation()
     {
-        if(CurrState == State.Idle)
+        if(CurrState == CreatureState.Idle)
         {
             switch (_lastDir)
             {
@@ -38,7 +38,7 @@ public class PlayerController : BaseController
                     break;
             }
         }
-        else if(CurrState == State.Moving)
+        else if(CurrState == CreatureState.Moving)
         {
             switch (_moveDir)
             {
@@ -60,7 +60,7 @@ public class PlayerController : BaseController
                     break;
             }
         }
-        else if(CurrState == State.Skill)
+        else if(CurrState == CreatureState.Skill)
         {
             //TODO
             switch (_lastDir)
@@ -93,10 +93,10 @@ public class PlayerController : BaseController
     {
         switch (CurrState)
         {
-            case State.Idle:
+            case CreatureState.Idle:
                 GetDirInput();
                 break;
-            case State.Moving:
+            case CreatureState.Moving:
                 GetDirInput();
                 break;
         }
@@ -138,14 +138,14 @@ public class PlayerController : BaseController
         //이동 상태
         if (Dir != MoveDir.None)
         {
-            CurrState = State.Moving;
+            CurrState = CreatureState.Moving;
             return;
         }
         
         //스킬 상태
         if (Input.GetKey(KeyCode.Space))
         {
-            CurrState = State.Skill;
+            CurrState = CreatureState.Skill;
             //_coSkill = StartCoroutine("CoStartPunch");
             _coSkill = StartCoroutine("CoStartArrow");
         }
@@ -166,7 +166,7 @@ public class PlayerController : BaseController
         //대기시간
         yield return new WaitForSeconds(0.5f);
         _rangeSkill = false;
-        CurrState = State.Idle;
+        CurrState = CreatureState.Idle;
         _coSkill = null;
     }
 
@@ -182,7 +182,7 @@ public class PlayerController : BaseController
         //대기시간
         _rangeSkill = true;
         yield return new WaitForSeconds(0.3f);
-        CurrState = State.Idle;
+        CurrState = CreatureState.Idle;
         _coSkill = null;
     }
     
