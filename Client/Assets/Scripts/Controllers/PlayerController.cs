@@ -166,7 +166,7 @@ public class PlayerController : BaseController
         //대기시간
         yield return new WaitForSeconds(0.5f);
         _rangeSkill = false;
-        CurrState = CreatureState.Idle;
+        CurrState = CreatureState.Moving;
         _coSkill = null;
     }
 
@@ -182,8 +182,12 @@ public class PlayerController : BaseController
         //대기시간
         _rangeSkill = true;
         yield return new WaitForSeconds(0.3f);
-        CurrState = CreatureState.Idle;
+        CurrState = CreatureState.Moving;
         _coSkill = null;
     }
-    
+
+    public override void OnDamaged()
+    {
+        Debug.Log("Player Hit!");
+    }
 }

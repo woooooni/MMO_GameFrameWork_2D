@@ -7,6 +7,7 @@ public class MonsterController : BaseController
 {
 	Coroutine _coPatrol;
 	Coroutine _coSearch;
+	Coroutine _coSkill;
 
 	[SerializeField]
 	Vector3Int _destCellPos;
@@ -15,7 +16,11 @@ public class MonsterController : BaseController
 	GameObject _target;
 
 	[SerializeField]
-	float _searchRange = 5.0f;
+	float _searchRange = 10.0f;
+	float _skillRange = 1.0f;
+
+	[SerializeField] 
+	bool _rangeSkill;
 
 	public override CreatureState CurrState
 	{
@@ -49,6 +54,12 @@ public class MonsterController : BaseController
 		Dir = MoveDir.None;
 
 		_speed = 3.0f;
+		_rangeSkill = (Random.Range(0, 2) == 0 ? true : false);
+
+		if (_rangeSkill == true)
+			_skillRange = 10.0f;
+		else
+			_skillRange = 1.0f;
 	}
 
 	protected override void UpdateIdle()
@@ -72,6 +83,17 @@ public class MonsterController : BaseController
 		if (_target != null)
 		{
 			destPos = _target.GetComponent<BaseController>().CellPos;
+			Vector3Int dir = destPos - CellPos;
+			if (dir.magnitude <= _skillRange && (dir.x == 0 || dir.y == 0))
+			{
+				Dir = GetDirFromVec(dir);
+				CurrState = CreatureState.Skill;
+				if(_rangeSkill == true)
+					_coSkill = StartCoroutine("CoStartArrow");
+				else
+					_coSkill = StartCoroutine("CoStartPunch");
+				return;
+			}
 		}
 
 		List<Vector3Int> path = Managers.Map.FindPath(CellPos, destPos, ignoreDestCollision: true);
@@ -85,16 +107,7 @@ public class MonsterController : BaseController
 		Vector3Int nextPos = path[1];
 		Vector3Int moveCellDir = nextPos - CellPos;
 
-		if (moveCellDir.x > 0)
-			Dir = MoveDir.Right;
-		else if (moveCellDir.x < 0)
-			Dir = MoveDir.Left;
-		else if (moveCellDir.y > 0)
-			Dir = MoveDir.Up;
-		else if (moveCellDir.y < 0)
-			Dir = MoveDir.Down;
-		else
-			Dir = MoveDir.None;
+		Dir = GetDirFromVec(moveCellDir);
 
 		if (Managers.Map.CanGo(nextPos) && Managers.Object.Find(nextPos) == null)
 		{
@@ -161,5 +174,37 @@ public class MonsterController : BaseController
 				return true;
 			});
 		}
+	}
+	
+	IEnumerator CoStartPunch()
+	{
+		//피격 판정
+		GameObject go = Managers.Object.Find(GetFrontCellPos(1));
+		if (go != null)
+		{
+			BaseController bc = go.GetComponent<BaseController>();
+			if(bc != null)
+				bc.OnDamaged();
+		}
+        
+		//대기시간
+		yield return new WaitForSeconds(0.5f);
+		CurrState = CreatureState.Idle;
+		_coSkill = null;
+	}
+	
+	IEnumerator CoStartArrow()
+	{
+		// 1. 오브젝트 추출
+		GameObject go = Managers.Resource.Instantiate("Creature/Arrow");
+		// 2. 컨트롤러 추출
+		ArrowController ac = go.GetComponent<ArrowController>();
+		ac.Dir = _lastDir;
+		ac.CellPos = CellPos;
+        
+		//대기시간
+		yield return new WaitForSeconds(0.3f);
+		CurrState = CreatureState.Idle;
+		_coSkill = null;
 	}
 }
