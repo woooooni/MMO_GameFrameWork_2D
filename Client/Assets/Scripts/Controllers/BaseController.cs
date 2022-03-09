@@ -11,7 +11,26 @@ public class BaseController : MonoBehaviour
     public Vector3Int CellPos { get; set; } = Vector3Int.zero;
     protected Animator _animator;
     protected SpriteRenderer _sprite;
-    
+
+    void Start()
+    {
+        Init();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        UpdateController();
+    }
+
+    protected virtual void Init()
+    {
+        _animator = GetComponent<Animator>();
+        _sprite = GetComponent<SpriteRenderer>();
+        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
+        transform.position = pos;
+    }
+
     //**상태 관리는 불리언으로 하지 않는다.**
     protected CreatureState _state = CreatureState.Idle;
     public virtual CreatureState CurrState
@@ -156,25 +175,6 @@ public class BaseController : MonoBehaviour
     }
     
     // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        UpdateController();
-    }
-
-    protected virtual void Init()
-    {
-        _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
-        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
-        transform.position = pos;
-    }
-
     protected virtual void UpdateController()
     {
         switch (CurrState)

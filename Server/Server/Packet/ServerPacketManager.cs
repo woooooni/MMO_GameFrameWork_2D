@@ -1,3 +1,5 @@
+using Google.Protobuf;
+using Google.Protobuf.Protocol;
 using ServerCore;
 using System;
 using System.Collections.Generic;
@@ -15,13 +17,12 @@ class PacketManager
 	}
 
 	Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
-	Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
+	Dictionary<ushort, Action<PacketSession, IMessage>> _handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
 		
 	public void Register()
 	{
-		_onRecv.Add((ushort)PacketID.C_Chat, MakePacket<C_Chat>);
+		_onRecv.Add((ushort)MsgID.CChat, MakePacket<C_Chat>);
 		_handler.Add((ushort)PacketID.C_Chat, PacketHandler.C_ChatHandler);
-
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
@@ -38,11 +39,11 @@ class PacketManager
 			action.Invoke(session, buffer);
 	}
 
-	void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
+	void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IMessage, new()
 	{
 		T pkt = new T();
 		pkt.Read(buffer);
-		Action<PacketSession, IPacket> action = null;
+		Action<PacketSession, IMessage> action = null;
 		if (_handler.TryGetValue(pkt.Protocol, out action))
 			action.Invoke(session, pkt);
 	}

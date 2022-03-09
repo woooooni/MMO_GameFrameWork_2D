@@ -1,7 +1,21 @@
 syntax = "proto3";
-
 package Protocol;
+
 option csharp_namespace = "Google.Protobuf.Protocol";
+
+
+enum MsgID{
+    C_CHAT = 0;
+    S_CHAT = 1;
+}
+
+message C_Chat{
+    string context = 1;
+}
+
+message S_Chat{
+    string context = 1;
+}
 
 message Person {
     string name = 1;
@@ -19,7 +33,7 @@ message Person {
         PhoneType type = 2;
     }
 
-    repeated PhoneNumber phones = 5;
+    repeated PhoneNumber phones = 4;
 }
 
 // Our address book file is just one of these.

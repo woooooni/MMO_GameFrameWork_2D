@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Common\\protoc-3.19.4-linux-aarch_64",
+    "\\Common\\protoc-3.19.4-linux-aarch_64\\bin",
+    "\\Common\\protoc-3.19.4-win64",
+    "\\Common\\protoc-3.19.4-win64\\bin",
+    "\\Server",
+    "\\Server\\Common",
+    "\\Server\\Common\\Packet",
+    "\\Server\\Server"
+  ],
+  "SelectedNode": "\\Server\\Server\\Server.csproj",
+  "PreviewInSolutionExplorer": false
+}
