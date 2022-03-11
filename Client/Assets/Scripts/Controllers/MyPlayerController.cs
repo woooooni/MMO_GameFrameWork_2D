@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,24 @@ public class MyPlayerController : PlayerController
 		base.UpdateController();
 	}
 
+	protected override void UpdateIdle()
+	{
+		// 이동 상태로 갈지 확인
+		if (Dir != MoveDir.None)
+		{
+			State = CreatureState.Moving;
+			return;
+		}
+
+		// 스킬 상태로 갈지 확인
+		if (Input.GetKey(KeyCode.Space))
+		{
+			State = CreatureState.Skill;
+			//_coSkill = StartCoroutine("CoStartPunch");
+			_coSkill = StartCoroutine("CoStartShootArrow");
+		}
+	}
+
 	void GetDirInput()
 	{
 		if (Input.GetKey(KeyCode.W))
@@ -54,21 +73,53 @@ public class MyPlayerController : PlayerController
 		}
 	}
 
-	protected override void UpdateIdle()
+	protected override void MoveToNextPos()
 	{
-		// 이동 상태로 갈지 확인
-		if (Dir != MoveDir.None)
+		if (Dir == MoveDir.None)
 		{
-			State = CreatureState.Moving;
+			State = CreatureState.Idle;
+			CheckUpdatedFlag();
 			return;
 		}
 
-		// 스킬 상태로 갈지 확인
-		if (Input.GetKey(KeyCode.Space))
+		Vector3Int destPos = CellPos;
+
+		switch (Dir)
 		{
-			State = CreatureState.Skill;
-			//_coSkill = StartCoroutine("CoStartPunch");
-			_coSkill = StartCoroutine("CoStartShootArrow");
+			case MoveDir.Up:
+				destPos += Vector3Int.up;
+				break;
+			case MoveDir.Down:
+				destPos += Vector3Int.down;
+				break;
+			case MoveDir.Left:
+				destPos += Vector3Int.left;
+				break;
+			case MoveDir.Right:
+				destPos += Vector3Int.right;
+				break;
 		}
+
+		if (Managers.Map.CanGo(destPos))
+		{
+			if (Managers.Object.Find(destPos) == null)
+			{
+				CellPos = destPos;
+			}
+		}
+
+		CheckUpdatedFlag();
 	}
+
+	void CheckUpdatedFlag()
+    {
+		if(_updated == true)
+        {
+			C_Move movePacket = new C_Move();
+			movePacket.PosInfo = PosInfo;
+			Managers.Network.Send(movePacket);
+			_updated = false;
+		}
+
+    }
 }

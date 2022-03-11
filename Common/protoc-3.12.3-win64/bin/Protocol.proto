@@ -12,6 +12,23 @@ enum MsgId {
   S_MOVE = 5;
 }
 
+enum CreatureState
+{
+    IDLE = 0;
+    Moving = 1;
+    Skill = 2;
+    Dead = 3;
+}
+
+enum MoveDir
+{
+    NONE = 0;
+    UP = 1;
+    DOWN = 2;
+    LEFT = 3;
+    RIGHT = 4;
+}
+
 message S_EnterGame {
   PlayerInfo player = 1;
 }
@@ -29,14 +46,12 @@ message S_Despawn{
 }
 
 message C_Move{
-	int32 posX = 1;
-	int32 posY = 2;
+	PositionInfo posInfo = 1;
 }
 
 message S_Move{
 	int32 playerID = 1;
-	int32 posX = 2;
-	int32 posY = 3;
+	PositionInfo posInfo = 2;
 }
 
 message PlayerInfo{
@@ -44,6 +59,12 @@ message PlayerInfo{
 	//플레이어 식별용
 	int32 playerID = 1;
 	string name = 2;
+	PositionInfo posInfo = 3;
+}
+
+message PositionInfo{
+	CreatureState state = 1;
+	MoveDir MoveDir = 2;
 	int32 posX = 3;
 	int32 posY = 4;
 }
