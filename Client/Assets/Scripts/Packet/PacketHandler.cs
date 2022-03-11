@@ -13,8 +13,8 @@ class PacketHandler
 		S_EnterGame enterGamePacket = packet as S_EnterGame;
 		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_EnterGameHandler");
-		Debug.Log(enterGamePacket.Player.Name);
+		//클라에 리소스 로딩
+		Managers.Object.Add(enterGamePacket.Player, true);
 	}
 
 	public static void S_LeaveGameHandler(PacketSession session, IMessage packet)
@@ -22,7 +22,7 @@ class PacketHandler
 		S_LeaveGame leaveGamePacket = packet as S_LeaveGame;
 		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_LeaveGameHandler");
+		Managers.Object.RemoveMyplayer();
 	}
 
 	public static void S_SpawnHandler(PacketSession session, IMessage packet)
@@ -30,8 +30,10 @@ class PacketHandler
 		S_Spawn spawnPacket = packet as S_Spawn;
 		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_SpawnHandler");
-		Debug.Log(spawnPacket.Players);
+		foreach(PlayerInfo p in spawnPacket.Players)
+        {
+			Managers.Object.Add(p, myPlayer: false);
+		}
 	}
 
 	public static void S_DespawnHandler(PacketSession session, IMessage packet)
@@ -39,7 +41,10 @@ class PacketHandler
 		S_Despawn despawnPacket = packet as S_Despawn;
 		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_DespawnHandler");
+		foreach (int id in despawnPacket.PlayerIDs)
+		{
+			Managers.Object.Remove(id);
+		}
 	}
 
 	public static void S_MoveHandler(PacketSession session, IMessage packet)
