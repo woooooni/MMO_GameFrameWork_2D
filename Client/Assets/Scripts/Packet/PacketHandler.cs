@@ -69,4 +69,20 @@ class PacketHandler
 		//내 캐릭터는 이미 클라에서 이동을 했는데 서버에서 다시 받아서 이동을 덮어써ㅏ야할까?
 		cc.PosInfo = movePacket.PosInfo;
 	}
+
+	public static void S_SkillHandler(PacketSession session, IMessage packet)
+	{
+		S_Skill skillPacket = packet as S_Skill;
+		ServerSession serverSession = session as ServerSession;
+
+		GameObject go = Managers.Object.FindByID(skillPacket.PlayerID);
+		if (go == null)
+			return;
+
+		PlayerController pc = go.GetComponent<PlayerController>();
+		if (pc != null)
+        {
+			pc.UseSkill(skillPacket.Info.SkillID);
+        }
+	}
 }
