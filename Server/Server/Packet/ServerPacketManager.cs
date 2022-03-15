@@ -18,9 +18,9 @@ class PacketManager
 
 	Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
 	Dictionary<ushort, Action<PacketSession, IMessage>> _handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
-	
-	public Action<PacketSession, IMessage, ushort> CustomHandler{ get; set; }
-	
+		
+	public Action<PacketSession, IMessage, ushort> CustomHandler { get; set; }
+
 	public void Register()
 	{		
 		_onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
@@ -47,12 +47,11 @@ class PacketManager
 	{
 		T pkt = new T();
 		pkt.MergeFrom(buffer.Array, buffer.Offset + 4, buffer.Count - 4);
-		
-		if(CustomHandler != null)
+
+		if (CustomHandler != null)
 		{
 			CustomHandler.Invoke(session, pkt, id);
 		}
-
 		else
 		{
 			Action<PacketSession, IMessage> action = null;

@@ -92,26 +92,25 @@ public class PlayerController : CreatureController
 	}
 
 	protected override void UpdateController()
-	{	
+	{		
 		base.UpdateController();
 	}
 
-	public void UseSkill(int skillID)
-    {
-		if(skillID == 1)
-        {
+	public void UseSkill(int skillId)
+	{
+		if (skillId == 1)
+		{
 			_coSkill = StartCoroutine("CoStartPunch");
-        }
-    }
+		}
+	}
 
 	protected virtual void CheckUpdatedFlag()
-    {
+	{
 
-    }
+	}
 
 	IEnumerator CoStartPunch()
 	{
-		// ★쿨타임 체크 => 서버, 클라 둘다 해야 함.
 		// 대기 시간
 		_rangedSkill = false;
 		State = CreatureState.Skill;

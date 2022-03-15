@@ -7,8 +7,8 @@ using static Define;
 
 public class CreatureController : MonoBehaviour
 {
+	public int Id { get; set; }
 
-	public int ID { get; set; }
 	[SerializeField]
 	public float _speed = 5.0f;
 
@@ -16,46 +16,45 @@ public class CreatureController : MonoBehaviour
 
 	PositionInfo _positionInfo = new PositionInfo();
 	public PositionInfo PosInfo
-    {
+	{
 		get { return _positionInfo; }
 		set
-        {
+		{
 			if (_positionInfo.Equals(value))
 				return;
 
 			CellPos = new Vector3Int(value.PosX, value.PosY, 0);
 			State = value.State;
 			Dir = value.MoveDir;
-        }
-    }
+		}
+	}
 
 	public void SyncPos()
-    {
+	{
 		Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
 		transform.position = destPos;
 	}
 
-
 	public Vector3Int CellPos 
-	{
-        get
-        {
+	{ 
+		get
+		{
 			return new Vector3Int(PosInfo.PosX, PosInfo.PosY, 0);
-        }
-        set
-		{ 
+		}
+
+		set
+		{
 			if (PosInfo.PosX == value.x && PosInfo.PosY == value.y)
 				return;
 
 			PosInfo.PosX = value.x;
 			PosInfo.PosY = value.y;
 			_updated = true;
-		} 
+		}
 	}
 
 	protected Animator _animator;
 	protected SpriteRenderer _sprite;
-
 
 	public virtual CreatureState State
 	{
@@ -70,6 +69,7 @@ public class CreatureController : MonoBehaviour
 			_updated = true;
 		}
 	}
+
 	public MoveDir Dir
 	{
 		get { return PosInfo.MoveDir; }

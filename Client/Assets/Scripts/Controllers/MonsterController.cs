@@ -132,7 +132,7 @@ public class MonsterController : CreatureController
 		effect.GetComponent<Animator>().Play("START");
 		GameObject.Destroy(effect, 0.5f);
 
-		Managers.Object.Remove(ID);
+		Managers.Object.Remove(Id);
 		Managers.Resource.Destroy(gameObject);
 	}
 

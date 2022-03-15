@@ -1,4 +1,4 @@
-using Google.Protobuf.Protocol;
+ï»¿using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +6,11 @@ using static Define;
 
 public class MyPlayerController : PlayerController
 {
-
 	bool _moveKeyPressed = false;
+
 	protected override void Init()
 	{
 		base.Init();
-	}
-
-	void LateUpdate()
-	{
-		Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 	}
 
 	protected override void UpdateController()
@@ -35,42 +30,42 @@ public class MyPlayerController : PlayerController
 
 	protected override void UpdateIdle()
 	{
-		// ÀÌµ¿ »óÅÂ·Î °¥Áö È®ÀÎ
+		// ì´ë™ ìƒíƒœë¡œ ê°ˆì§€ í™•ì¸
 		if (_moveKeyPressed)
 		{
 			State = CreatureState.Moving;
 			return;
 		}
 
-		// ½ºÅ³ »óÅÂ·Î °¥Áö È®ÀÎ
 		if (_coSkillCooltime == null && Input.GetKey(KeyCode.Space))
 		{
-			// 1. ½Ã°£À» Àç°Å³ª,
-			// 2. ÄÚ·çÆ¾À» »ç¿ë
-			// À§ µÎ ¹æ¹ı Áß ÇÏ³ª¸¦ »ç¿ëÇØ¼­, ½ºÅ³»ç¿ë ÆĞÅ¶À» °è¼Óº¸³»Áö¾Ê°Ô ÄÚµå¸¦ Â¥¾ßÇÔ.
-
 			Debug.Log("Skill !");
 
-
-			C_Skill skill = new C_Skill() { Info = new SkilInfo() };
-			skill.Info.SkillID = 1;
+			C_Skill skill = new C_Skill() { Info = new SkillInfo() };
+			skill.Info.SkillId = 1;
 			Managers.Network.Send(skill);
 
-			_coSkillCooltime = StartCoroutine("CoInputCoolTime", 0.2f);
+			_coSkillCooltime = StartCoroutine("CoInputCooltime", 0.2f);
 		}
 	}
 
 	Coroutine _coSkillCooltime;
-	IEnumerator CoInputCoolTime(float time)
-    {
+	IEnumerator CoInputCooltime(float time)
+	{
 		yield return new WaitForSeconds(time);
 		_coSkillCooltime = null;
-
 	}
 
+	void LateUpdate()
+	{
+		Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+	}
+
+	// í‚¤ë³´ë“œ ì…ë ¥
 	void GetDirInput()
 	{
 		_moveKeyPressed = true;
+
 		if (Input.GetKey(KeyCode.W))
 		{
 			Dir = MoveDir.Up;
@@ -132,14 +127,13 @@ public class MyPlayerController : PlayerController
 	}
 
 	protected override void CheckUpdatedFlag()
-    {
-		if(_updated)
-        {
+	{
+		if (_updated)
+		{
 			C_Move movePacket = new C_Move();
 			movePacket.PosInfo = PosInfo;
 			Managers.Network.Send(movePacket);
 			_updated = false;
 		}
-
-    }
+	}
 }
