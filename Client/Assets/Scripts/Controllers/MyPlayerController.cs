@@ -39,8 +39,6 @@ public class MyPlayerController : PlayerController
 
 		if (_coSkillCooltime == null && Input.GetKey(KeyCode.Space))
 		{
-			Debug.Log("Skill !");
-
 			C_Skill skill = new C_Skill() { Info = new SkillInfo() };
 			skill.Info.SkillId = 2;
 			Managers.Network.Send(skill);
@@ -117,7 +115,7 @@ public class MyPlayerController : PlayerController
 
 		if (Managers.Map.CanGo(destPos))
 		{
-			if (Managers.Object.Find(destPos) == null)
+			if (Managers.Object.FindCreature(destPos) == null)
 			{
 				CellPos = destPos;
 			}
