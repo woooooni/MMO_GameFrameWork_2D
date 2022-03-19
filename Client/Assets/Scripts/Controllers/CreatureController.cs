@@ -48,10 +48,16 @@ public class CreatureController : BaseController
 		AddHpBar();
 	}
 
+	public virtual void UseSkill(int skillId)
+	{
+		
+	}
+
 	public virtual void OnDamaged()
 	{
 
 	}
+
 
 	public virtual void OnDead()
     {

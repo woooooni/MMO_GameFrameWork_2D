@@ -32,7 +32,7 @@ namespace Server.Game
 				movePacket.PosInfo = PosInfo;
 				Room.Broadcast(movePacket);
 
-				Console.WriteLine("Move Arrow");
+				//Console.WriteLine("Move Arrow");
 			}
 			else
 			{

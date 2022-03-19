@@ -12,6 +12,8 @@ namespace Server.Game
 		object _lock = new object();
 		public int RoomId { get; set; }
 
+
+
 		Dictionary<int, Player> _players = new Dictionary<int, Player>();
 		Dictionary<int, Monster> _monsters = new Dictionary<int, Monster>();
 		Dictionary<int, Projectile> _projectiles = new Dictionary<int, Projectile>();
@@ -21,12 +23,23 @@ namespace Server.Game
 		public void Init(int mapId)
 		{
 			Map.LoadMap(mapId);
+
+			//Temp
+			//테스트용 몬스터 만들기
+			Monster monster = ObjectManager.Instance.Add<Monster>();
+			monster.CellPos = new Vector2Int(5, 5);
+			EnterGame(monster);
 		}
 
 		public void Update()
 		{
 			lock (_lock)
 			{
+				foreach (Monster monster in _monsters.Values)
+				{
+					monster.Update();
+				}
+
 				foreach (Projectile projectile in _projectiles.Values)
 				{
 					projectile.Update();
@@ -77,7 +90,7 @@ namespace Server.Game
 					Monster monster = gameObject as Monster;
 					_monsters.Add(gameObject.Id, monster);
 					monster.Room = this;
-
+					monster.Info = gameObject.Info;
 					Map.ApplyMove(monster, new Vector2Int(monster.CellPos.x, monster.CellPos.y));
 				}
 				else if (type == GameObjectType.Projectile)
@@ -239,6 +252,15 @@ namespace Server.Game
 			}
 		}
 
+		public Player FindPlayer(Func<GameObject, bool> condition)
+        {
+			foreach(Player player in _players.Values)
+            {
+				if(condition.Invoke(player))
+					return player;
+            }
+			return null;
+        }
 		public void Broadcast(IMessage packet)
 		{
 			lock (_lock)

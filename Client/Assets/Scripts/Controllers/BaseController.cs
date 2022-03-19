@@ -240,8 +240,6 @@ public class BaseController : MonoBehaviour
 		Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
 		transform.position = pos;
 
-		State = CreatureState.Idle;
-		Dir = MoveDir.Down;
 		UpdateAnimation();
 	}
 
@@ -249,6 +247,9 @@ public class BaseController : MonoBehaviour
 	{
 		switch (State)
 		{
+			//TODO : Behavior Tree!
+
+			// 아래는 유한상태기계를 사용한 AI임.
 			case CreatureState.Idle:
 				UpdateIdle();
 				break;
