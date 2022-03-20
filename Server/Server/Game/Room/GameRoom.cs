@@ -26,8 +26,21 @@ namespace Server.Game
 			Monster monster = ObjectManager.Instance.Add<Monster>();
 			monster.CellPos = new Vector2Int(5, 5);
 			EnterGame(monster);
+			TestTimer();
 		}
 
+		void TestTimer()
+        {
+            Console.WriteLine("TestTimer!");
+			PushAfter(100, TestTimer);
+        }
+
+
+		//게임에 따라 업데이트 주기가 다름.
+		// MMO (일반적으로 50ms ~ 100ms 정도)
+		// LOL (0.1초 정도)
+		// FPS
+		// 누군가 주기적으로 호출하는 함수임.
 		public void Update()
 		{
 			foreach (Monster monster in _monsters.Values)
@@ -39,6 +52,7 @@ namespace Server.Game
 			{
 				projectile.Update();
 			}
+			Flush();
 		}
 
 

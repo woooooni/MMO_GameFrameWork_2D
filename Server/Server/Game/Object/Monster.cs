@@ -51,12 +51,11 @@ namespace Server.Game
         {
 			if (_nextSearchTick > Environment.TickCount64)
 				return;
-			_nextSearchTick = Environment.TickCount64 + 1000;
 
+			_nextSearchTick = Environment.TickCount64 + 1000;
 			Player target = Room.FindPlayer(p =>
 			{
 				Vector2Int dir = p.CellPos - CellPos;
-
 				return dir.cellDistFromZero <= _serachCellDist;
 			});
 
