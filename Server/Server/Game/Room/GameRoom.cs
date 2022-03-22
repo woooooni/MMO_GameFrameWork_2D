@@ -31,7 +31,6 @@ namespace Server.Game
 
 		void TestTimer()
         {
-            Console.WriteLine("TestTimer!");
 			PushAfter(100, TestTimer);
         }
 
@@ -145,8 +144,8 @@ namespace Server.Game
 				if (_monsters.Remove(objectId, out monster) == false)
 					return;
 
-				monster.Room = null;
 				Map.ApplyLeave(monster);
+				monster.Room = null;
 			}
 			else if (type == GameObjectType.Projectile)
 			{
