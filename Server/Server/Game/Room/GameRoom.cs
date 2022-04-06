@@ -8,7 +8,7 @@ using System.Text;
 namespace Server.Game
 {
 	public class GameRoom : JobSerializer
-    {
+	{
 		public int RoomId { get; set; }
 
 		Dictionary<int, Player> _players = new Dictionary<int, Player>();
@@ -21,25 +21,13 @@ namespace Server.Game
 		{
 			Map.LoadMap(mapId);
 
-			//Temp
-			//테스트용 몬스터 만들기
+			// TEMP
 			Monster monster = ObjectManager.Instance.Add<Monster>();
 			monster.CellPos = new Vector2Int(5, 5);
 			EnterGame(monster);
-			TestTimer();
 		}
 
-		void TestTimer()
-        {
-			PushAfter(100, TestTimer);
-        }
-
-
-		//게임에 따라 업데이트 주기가 다름.
-		// MMO (일반적으로 50ms ~ 100ms 정도)
-		// LOL (0.1초 정도)
-		// FPS
-		// 누군가 주기적으로 호출하는 함수임.
+		// 누군가 주기적으로 호출해줘야 한다
 		public void Update()
 		{
 			foreach (Monster monster in _monsters.Values)
@@ -51,18 +39,17 @@ namespace Server.Game
 			{
 				projectile.Update();
 			}
+
 			Flush();
 		}
 
-
-
-		//Lock을 사용하지 않기 때문에, 외부에서 직접 접근하여 사용하는것은 매우매우매우매우 위험!
 		public void EnterGame(GameObject gameObject)
 		{
 			if (gameObject == null)
 				return;
 
 			GameObjectType type = ObjectManager.GetObjectTypeById(gameObject.Id);
+
 			if (type == GameObjectType.Player)
 			{
 				Player player = gameObject as Player;
@@ -83,7 +70,8 @@ namespace Server.Game
 						if (player != p)
 							spawnPacket.Objects.Add(p.Info);
 					}
-					foreach(Monster m in _monsters.Values)
+
+					foreach (Monster m in _monsters.Values)
 						spawnPacket.Objects.Add(m.Info);
 
 					foreach (Projectile p in _projectiles.Values)
@@ -97,7 +85,7 @@ namespace Server.Game
 				Monster monster = gameObject as Monster;
 				_monsters.Add(gameObject.Id, monster);
 				monster.Room = this;
-				monster.Info = gameObject.Info;
+
 				Map.ApplyMove(monster, new Vector2Int(monster.CellPos.x, monster.CellPos.y));
 			}
 			else if (type == GameObjectType.Projectile)
@@ -117,12 +105,12 @@ namespace Server.Game
 						p.Session.Send(spawnPacket);
 				}
 			}
-			
 		}
 
 		public void LeaveGame(int objectId)
 		{
 			GameObjectType type = ObjectManager.GetObjectTypeById(objectId);
+
 			if (type == GameObjectType.Player)
 			{
 				Player player = null;
@@ -172,6 +160,7 @@ namespace Server.Game
 		{
 			if (player == null)
 				return;
+
 			// TODO : 검증
 			PositionInfo movePosInfo = movePacket.PosInfo;
 			ObjectInfo info = player.Info;
@@ -199,6 +188,7 @@ namespace Server.Game
 		{
 			if (player == null)
 				return;
+
 			ObjectInfo info = player.Info;
 			if (info.PosInfo.State != CreatureState.Idle)
 				return;
@@ -214,11 +204,10 @@ namespace Server.Game
 			if (DataManager.SkillDict.TryGetValue(skillPacket.Info.SkillId, out skillData) == false)
 				return;
 
-            switch (skillData.skillType)
-            {
+			switch (skillData.skillType)
+			{
 				case SkillType.SkillAuto:
-					{ 
-						// TODO : 데미지 판정
+					{
 						Vector2Int skillPos = player.GetFrontCellPos(info.PosInfo.MoveDir);
 						GameObject target = Map.Find(skillPos);
 						if (target != null)
@@ -227,9 +216,8 @@ namespace Server.Game
 						}
 					}
 					break;
-
 				case SkillType.SkillProjectile:
-                    {
+					{
 						Arrow arrow = ObjectManager.Instance.Add<Arrow>();
 						if (arrow == null)
 							return;
@@ -244,19 +232,19 @@ namespace Server.Game
 						Push(EnterGame, arrow);
 					}
 					break;
-            }
+			}
 		}
 
-		//TODO
 		public Player FindPlayer(Func<GameObject, bool> condition)
-        {
-			foreach(Player player in _players.Values)
-            {
-				if(condition.Invoke(player))
+		{
+			foreach (Player player in _players.Values)
+			{
+				if (condition.Invoke(player))
 					return player;
-            }
+			}
+
 			return null;
-        }
+		}
 
 		public void Broadcast(IMessage packet)
 		{

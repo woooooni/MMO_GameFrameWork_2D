@@ -102,10 +102,10 @@ public class PlayerController : CreatureController
 		{
 			_coSkill = StartCoroutine("CoStartPunch");
 		}
-		else if(skillId == 2)
-        {
+		else if (skillId == 2)
+		{
 			_coSkill = StartCoroutine("CoStartShootArrow");
-        }
+		}
 	}
 
 	protected virtual void CheckUpdatedFlag()

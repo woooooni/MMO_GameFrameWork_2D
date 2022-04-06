@@ -19,8 +19,9 @@ namespace Server
 	{
 		static Listener _listener = new Listener();
 		static List<System.Timers.Timer> _timers = new List<System.Timers.Timer>();
+
 		static void TickRoom(GameRoom room, int tick = 100)
-        {
+		{
 			var timer = new System.Timers.Timer();
 			timer.Interval = tick;
 			timer.Elapsed += ((s, e) => { room.Update(); });
@@ -28,14 +29,12 @@ namespace Server
 			timer.Enabled = true;
 
 			_timers.Add(timer);
-        }
+		}
 
 		static void Main(string[] args)
 		{
-
 			ConfigManager.LoadConfig();
 			DataManager.LoadData();
-			var d = DataManager.StatDict;
 
 			GameRoom room = RoomManager.Instance.Add(1);
 			TickRoom(room, 50);
@@ -55,10 +54,7 @@ namespace Server
 			// TODO
 			while (true)
 			{
-				//폴링방식도 나쁘진 않음.
 				//JobTimer.Instance.Flush();
-				////GameRoom room = RoomManager.Instance.Find(1);
-				////room.Push(room.Update);
 				Thread.Sleep(100);
 			}
 		}

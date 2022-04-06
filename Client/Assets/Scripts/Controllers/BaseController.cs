@@ -1,4 +1,4 @@
-using Google.Protobuf.Protocol;
+ï»¿using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,8 +9,6 @@ public class BaseController : MonoBehaviour
 {
 	public int Id { get; set; }
 
-
-	//fm´ë·ÎÇÏ·Á¸é, ÇÑ´Ü°è À§¿¡ Á¸ÀçÇØ¾ßÇÔ.
 	StatInfo _stat = new StatInfo();
 	public virtual StatInfo Stat
 	{
@@ -26,6 +24,12 @@ public class BaseController : MonoBehaviour
 		}
 	}
 
+	public float Speed
+	{
+		get { return Stat.Speed; }
+		set { Stat.Speed = value; }
+	}
+
 	public virtual int Hp
 	{
 		get { return Stat.Hp; }
@@ -33,12 +37,6 @@ public class BaseController : MonoBehaviour
 		{
 			Stat.Hp = value;
 		}
-	}
-
-	public float Speed
-	{
-		get { return Stat.Speed; }
-		set { Stat.Speed = value; }
 	}
 
 	protected bool _updated = false;
@@ -151,6 +149,9 @@ public class BaseController : MonoBehaviour
 
 	protected virtual void UpdateAnimation()
 	{
+		if (_animator == null || _sprite == null)
+			return;
+
 		if (State == CreatureState.Idle)
 		{
 			switch (Dir)
@@ -247,9 +248,6 @@ public class BaseController : MonoBehaviour
 	{
 		switch (State)
 		{
-			//TODO : Behavior Tree!
-
-			// ¾Æ·¡´Â À¯ÇÑ»óÅÂ±â°è¸¦ »ç¿ëÇÑ AIÀÓ.
 			case CreatureState.Idle:
 				UpdateIdle();
 				break;
@@ -269,13 +267,13 @@ public class BaseController : MonoBehaviour
 	{
 	}
 
-	// ½º¸£¸¤ ÀÌµ¿ÇÏ´Â °ÍÀ» Ã³¸®
+	// ìŠ¤ë¥´ë¥µ ì´ë™í•˜ëŠ” ê²ƒì„ ì²˜ë¦¬
 	protected virtual void UpdateMoving()
 	{
 		Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
 		Vector3 moveDir = destPos - transform.position;
 
-		// µµÂø ¿©ºÎ Ã¼Å©
+		// ë„ì°© ì—¬ë¶€ ì²´í¬
 		float dist = moveDir.magnitude;
 		if (dist < Speed * Time.deltaTime)
 		{

@@ -57,7 +57,6 @@ public class ObjectManager
 			mc.Stat = info.StatInfo;
 			mc.SyncPos();
 		}
-
 		else if (objectType == GameObjectType.Projectile)
 		{
 			GameObject go = Managers.Resource.Instantiate("Creature/Arrow");

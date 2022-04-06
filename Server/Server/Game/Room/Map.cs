@@ -46,13 +46,13 @@ namespace Server.Game
 			return new Vector2Int(a.x + b.x, a.y + b.y);
 		}
 
-		public static Vector2Int operator-(Vector2Int a, Vector2Int b)
-        {
+		public static Vector2Int operator -(Vector2Int a, Vector2Int b)
+		{
 			return new Vector2Int(a.x - b.x, a.y - b.y);
 		}
 
 		public float magnitude { get { return (float)Math.Sqrt(sqrMagnitude); } }
-		public int sqrMagnitude{ get { return (x * x + y * y); } }
+		public int sqrMagnitude { get { return (x * x + y * y); } }
 		public int cellDistFromZero { get { return Math.Abs(x) + Math.Abs(y); } }
 	}
 
@@ -99,6 +99,7 @@ namespace Server.Game
 				return false;
 			if (gameObject.Room.Map != this)
 				return false;
+
 			PositionInfo posInfo = gameObject.PosInfo;
 			if (posInfo.PosX < MinX || posInfo.PosX > MaxX)
 				return false;
@@ -175,7 +176,7 @@ namespace Server.Game
 		int[] _deltaX = new int[] { 0, 0, -1, 1 };
 		int[] _cost = new int[] { 10, 10, 10, 10 };
 
-		public List<Vector2Int> FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool checkObjects = false)
+		public List<Vector2Int> FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool checkObjects = true)
 		{
 			List<Pos> path = new List<Pos>();
 

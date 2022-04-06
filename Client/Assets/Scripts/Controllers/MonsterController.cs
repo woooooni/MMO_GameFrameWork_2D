@@ -13,14 +13,6 @@ public class MonsterController : CreatureController
 		base.Init();
 	}
 
-	public override void UseSkill(int skillId)
-	{
-		if(skillId == 1)
-        {
-			State = CreatureState.Skill;
-        }
-	}
-
 	protected override void UpdateIdle()
 	{
 		base.UpdateIdle();
@@ -30,5 +22,13 @@ public class MonsterController : CreatureController
 	{
 		//Managers.Object.Remove(Id);
 		//Managers.Resource.Destroy(gameObject);
+	}
+
+	public override void UseSkill(int skillId)
+	{
+		if (skillId == 1)
+		{
+			State = CreatureState.Skill;
+		}
 	}
 }

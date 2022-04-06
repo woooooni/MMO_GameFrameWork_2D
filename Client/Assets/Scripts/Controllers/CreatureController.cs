@@ -10,19 +10,19 @@ public class CreatureController : BaseController
 	HpBar _hpBar;
 
 	public override StatInfo Stat
-    {
+	{
 		get { return base.Stat; }
-        set { base.Stat = value; UpdateHpBar(); }
-    }
+		set { base.Stat = value; UpdateHpBar(); }
+	}
 
 	public override int Hp
-    {
-        get { return Stat.Hp; }
+	{
+		get { return Stat.Hp; }
 		set { base.Hp = value; UpdateHpBar(); }
-    }
+	}
 
 	protected void AddHpBar()
-    {
+	{
 		GameObject go = Managers.Resource.Instantiate("UI/HpBar", transform);
 		go.transform.localPosition = new Vector3(0, 0.5f, 0);
 		go.name = "HpBar";
@@ -31,16 +31,16 @@ public class CreatureController : BaseController
 	}
 
 	void UpdateHpBar()
-    {
+	{
 		if (_hpBar == null)
 			return;
 
 		float ratio = 0.0f;
-		if(Stat.MaxHp > 0)
+		if (Stat.MaxHp > 0)
 			ratio = ((float)Hp) / Stat.MaxHp;
 
 		_hpBar.SetHpBar(ratio);
-    }
+	}
 
 	protected override void Init()
 	{
@@ -48,24 +48,23 @@ public class CreatureController : BaseController
 		AddHpBar();
 	}
 
-	public virtual void UseSkill(int skillId)
-	{
-		
-	}
-
 	public virtual void OnDamaged()
 	{
 
 	}
 
-
 	public virtual void OnDead()
-    {
+	{
 		State = CreatureState.Dead;
 
 		GameObject effect = Managers.Resource.Instantiate("Effect/DieEffect");
 		effect.transform.position = transform.position;
 		effect.GetComponent<Animator>().Play("START");
 		GameObject.Destroy(effect, 0.5f);
+	}
+
+	public virtual void UseSkill(int skillId)
+	{
+
 	}
 }

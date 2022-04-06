@@ -32,15 +32,14 @@ namespace Server.Game
 				movePacket.PosInfo = PosInfo;
 				Room.Broadcast(movePacket);
 
-				//Console.WriteLine("Move Arrow");
+				Console.WriteLine("Move Arrow");
 			}
 			else
 			{
 				GameObject target = Room.Map.Find(destPos);
 				if (target != null)
 				{
-                    // TODO : 피격 판정
-					target.OnDamaged(this, (int)Data.damage + Owner.Stat.Attack);
+					target.OnDamaged(this, Data.damage + Owner.Stat.Attack);
 				}
 
 				// 소멸

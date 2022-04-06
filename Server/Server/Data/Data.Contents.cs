@@ -18,32 +18,31 @@ namespace Server.Data
 			{
 				stat.Hp = stat.MaxHp;
 				dict.Add(stat.Level, stat);
-			}
+			}	
 			return dict;
 		}
 	}
-    #endregion
+	#endregion
 
-    #region Skill
+	#region Skill
 	[Serializable]
 	public class Skill
-    {
+	{
 		public int id;
 		public string name;
 		public float cooldown;
-		public float damage;
+		public int damage;
 		public SkillType skillType;
-		public ProjectileIfo projectile;
-    }
+		public ProjectileInfo projectile;
+	}
 
-	public class ProjectileIfo
-    {
+	public class ProjectileInfo
+	{
 		public string name;
 		public float speed;
 		public int range;
 		public string prefab;
-
-    }
+	}
 
 	[Serializable]
 	public class SkillData : ILoader<int, Skill>
@@ -59,5 +58,4 @@ namespace Server.Data
 		}
 	}
 	#endregion
-
 }

@@ -16,12 +16,12 @@ namespace Server.Game
 
 		public override void OnDamaged(GameObject attacker, int damage)
 		{
-            base.OnDamaged(attacker, damage);
+			base.OnDamaged(attacker, damage);
 		}
 
-        public override void OnDead(GameObject attacker)
-        {
-            base.OnDead(attacker);
-        }
-    }
+		public override void OnDead(GameObject attacker)
+		{
+			base.OnDead(attacker);
+		}
+	}
 }

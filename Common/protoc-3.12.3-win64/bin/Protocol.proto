@@ -38,10 +38,10 @@ enum GameObjectType {
   PROJECTILE = 3;
 }
 
-enum SkillType{
-	SKILL_NONE = 0;
-	SKILL_AUTO = 1;
-	SKILL_PROJECTILE = 2;
+enum SkillType {
+  SKILL_NONE = 0;
+  SKILL_AUTO = 1;
+  SKILL_PROJECTILE = 2;
 }
 
 message S_EnterGame {
@@ -78,13 +78,13 @@ message S_Skill {
 }
 
 message S_ChangeHp {
-	int32 objectId = 1;
-	int32 hp = 2;
+  int32 objectId = 1;
+  int32 hp = 2;
 }
 
 message S_Die {
-	int32 objectId = 1;
-	int32 attackerID = 2;
+  int32 objectId = 1;
+  int32 attackerId = 2;
 }
 
 message ObjectInfo {
@@ -102,15 +102,14 @@ message PositionInfo {
 }
 
 message StatInfo {
-	int32 level = 1;
-	int32 hp = 2;
-	int32 maxHp = 3;
-	int32 attack = 4;
-	float speed = 5;
-	int32 totalExp = 6;
+  int32 level = 1;
+  int32 hp = 2;
+  int32 maxHp = 3;
+  int32 attack = 4;
+  float speed = 5;
+  int32 totalExp = 6;
 }
 
 message SkillInfo {
   int32 skillId = 1;
 }
-

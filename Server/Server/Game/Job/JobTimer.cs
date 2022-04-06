@@ -8,7 +8,7 @@ namespace Server.Game
 	struct JobTimerElem : IComparable<JobTimerElem>
 	{
 		public int execTick; // 실행 시간
-		public IJob job; // 일의 단위
+		public IJob job;
 
 		public int CompareTo(JobTimerElem other)
 		{
@@ -53,7 +53,7 @@ namespace Server.Game
 					_pq.Pop();
 				}
 
-				jobElement.job.Excute();
+				jobElement.job.Execute();
 			}
 		}
 	}
