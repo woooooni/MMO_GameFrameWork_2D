@@ -10,6 +10,7 @@ using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using Google.Protobuf.WellKnownTypes;
 using Server.Data;
+using Server.DB;
 using Server.Game;
 using ServerCore;
 
@@ -35,6 +36,8 @@ namespace Server
 		{
 			ConfigManager.LoadConfig();
 			DataManager.LoadData();
+
+			//db접속 시, AppDbContext를 using문을 사용해 자동으로 Dispose되게끔 하는 것이 정석임.
 
 			GameRoom room = RoomManager.Instance.Add(1);
 			TickRoom(room, 50);
