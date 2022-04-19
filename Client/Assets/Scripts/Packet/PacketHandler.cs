@@ -20,7 +20,44 @@ class PacketHandler
 	{
 		S_Login loginPacket = packet as S_Login;
 		Debug.Log($"UniqueId: {loginPacket.LoginOk}");
+
+		//TODO : 로비 UI에서 캐릭터를 보여주고, 선택가능하도록.
+		if(loginPacket.Players == null || loginPacket.Players.Count == 0)
+        {
+			C_CreatePlayer createPacket = new C_CreatePlayer();
+			createPacket.Name = $"Player_{Random.Range(0, 10000).ToString("0000")}";
+			Managers.Network.Send(createPacket);
+        }
+        else
+        {
+			//무조건 첫번째 로그인
+			LobbyPlayerInfo info = loginPacket.Players[0];
+			C_EnterGame enterGamePacket = new C_EnterGame();
+			enterGamePacket.Name = info.Name;
+			Managers.Network.Send(enterGamePacket);
+        }
 	}
+
+	public static void S_CreatePlayerHandler(PacketSession session, IMessage packet)
+    {
+		S_CreatePlayer createPlayerPacket = packet as S_CreatePlayer;
+		
+		if(createPlayerPacket.Player == null)
+        {
+			//만들기 실패
+			C_CreatePlayer createPacket = new C_CreatePlayer();
+			createPacket.Name = $"Player_{Random.Range(0, 10000).ToString("0000")}";
+			Managers.Network.Send(createPacket);
+		}
+        else
+        {
+			
+			C_EnterGame enterGamePacket = new C_EnterGame();
+			enterGamePacket.Name = createPlayerPacket.Player.Name;
+			Managers.Network.Send(enterGamePacket);
+			Debug.Log($"PlayerEnter!! Name({enterGamePacket.Name}) ");
+		}
+    }
 
 
 	public static void S_EnterGameHandler(PacketSession session, IMessage packet)
